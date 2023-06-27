@@ -79,7 +79,7 @@ const Task = () => {
   // Create task
 
   const handleCreate = (e) => {
-    console.log(dueDate.toISOString());
+    // console.log(dueDate.toISOString());
     e.preventDefault();
     setNewTask({
       ...newTask,

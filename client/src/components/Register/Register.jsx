@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { register } from "../../redux/actions/authActions";
+import { useNavigate } from "react-router-dom";
 import "./Register.css";
 
 const Register = () => {
@@ -8,11 +9,20 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(register(username, email, password));
+    dispatch(register(username, email, password))
+      .then(() => {
+        navigate("/login");
+        // window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
