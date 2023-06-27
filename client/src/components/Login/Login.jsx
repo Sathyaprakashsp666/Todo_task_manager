@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/actions/authActions";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -10,15 +11,18 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(login(username, password))
       .then(() => {
+        enqueueSnackbar("Login success", {variant:"success"});
         navigate("/login");
         window.location.reload();
       })
       .catch((error) => {
+        enqueueSnackbar("something went wrong!", {variant:"error"});
         console.log(error);
       });
   };

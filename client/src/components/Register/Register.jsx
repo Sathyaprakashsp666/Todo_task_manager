@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { register } from "../../redux/actions/authActions";
+import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 import "./Register.css";
 
 const Register = () => {
@@ -8,11 +10,23 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(register(username, email, password));
+    dispatch(register(username, email, password))
+      .then(() => {
+        enqueueSnackbar("Registered successfully", {variant:"success"});
+        navigate("/login");
+        // window.location.reload();
+      })
+      .catch((error) => {
+        enqueueSnackbar("something went wrong!", {variant:"error"});
+        console.log(error);
+      });
   };
 
   return (
