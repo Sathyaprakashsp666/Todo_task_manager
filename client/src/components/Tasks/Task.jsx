@@ -68,16 +68,18 @@ const Task = () => {
       username !== task.createdBy.username &&
       username !== task.assignedTo.username
     ) {
-      enqueueSnackbar("Only admin or assignee can delete this", {variant:"warning"});
+      enqueueSnackbar("Only admin or assignee can delete this", {
+        variant: "warning",
+      });
       return;
     }
     dispatch(deleteTask(task._id, token))
       .then(() => {
-        enqueueSnackbar("Deleted", {variant:"success"});
+        enqueueSnackbar("Deleted", { variant: "success" });
         dispatch(getAllTasks(token));
       })
       .catch((error) => {
-        enqueueSnackbar("something went wrong!", {variant:"error"});
+        enqueueSnackbar("something went wrong!", { variant: "error" });
         // console.log("Error deleting task:", error);
       });
   };
@@ -90,6 +92,7 @@ const Task = () => {
     setNewTask({
       ...newTask,
       dueDate: dueDate && dueDate.toISOString(),
+      createdBy: id ? id : null,
     });
     dispatch(createTask(newTask, token))
       .then(() => {
@@ -97,16 +100,18 @@ const Task = () => {
           title: "",
           description: "",
           assignedTo: "",
-          dueDate: "",
+          dueDate: new Date(),
           completed: false,
-          createdBy: "",
+          createdBy: id ? id : null,
         });
-        enqueueSnackbar("New task created!", {variant:"success"});
+        enqueueSnackbar("New task created!", { variant: "success" });
         dispatch(getAllTasks(token));
+        setDueDate(null);
+        setIsEditing(false);
       })
       .catch((error) => {
         // console.log("Error creating task:", error);
-        enqueueSnackbar("something went wrong!", {variant:"error"});
+        enqueueSnackbar("something went wrong!", { variant: "error" });
       });
   };
   // Update task
@@ -124,11 +129,11 @@ const Task = () => {
           assignedTo: "",
           dueDate: "",
         });
-        enqueueSnackbar("Task updated", {variant:"success"});
+        enqueueSnackbar("Task updated", { variant: "success" });
         dispatch(getAllTasks(token));
       })
       .catch((error) => {
-        enqueueSnackbar("something went wrong!", {variant:"error"});
+        enqueueSnackbar("something went wrong!", { variant: "error" });
         setIsEditing(false);
       });
   };
@@ -139,16 +144,18 @@ const Task = () => {
       username !== task.createdBy.username &&
       username !== task.assignedTo.username
     ) {
-      enqueueSnackbar("Only admin or assignee can edit this", {variant:"warning"});
+      enqueueSnackbar("Only admin or assignee can edit this", {
+        variant: "warning",
+      });
       return;
     }
     dispatch(toggleStatus(task._id, token))
       .then(() => {
-        enqueueSnackbar("Status updated", {variant:"success"});
+        enqueueSnackbar("Status updated", { variant: "success" });
         dispatch(getAllTasks(token));
       })
       .catch((error) => {
-        enqueueSnackbar("something went wrong!", {variant:"error"});
+        enqueueSnackbar("something went wrong!", { variant: "error" });
       });
   };
 
@@ -160,7 +167,9 @@ const Task = () => {
       username !== task.createdBy.username &&
       username !== task.assignedTo.username
     ) {
-      enqueueSnackbar("Only admin or assignee can edit this", {variant:"warning"});
+      enqueueSnackbar("Only admin or assignee can edit this", {
+        variant: "warning",
+      });
       return;
     }
     setIsEditing(true);
@@ -239,7 +248,7 @@ const Task = () => {
             handleCreate={handleCreate}
             newTask={newTask}
             setNewTask={setNewTask}
-            users={users}
+            users={users && users}
             dueDate={dueDate}
             setDueDate={setDueDate}
             handleEditBtn={handleEditBtn}

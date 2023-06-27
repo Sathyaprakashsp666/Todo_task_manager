@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Task.css";
 import { useSelector } from "react-redux";
 
@@ -14,6 +14,17 @@ const TaskItem = ({ task, handleEdit, handleDelete, toggleStatus }) => {
   } = task;
 
   const username = useSelector((state) => state.auth.username);
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const handleToggleStatus = () => {
+    setIsButtonDisabled(true);
+    toggleStatus();
+
+    setTimeout(() => {
+      setIsButtonDisabled(false);
+    }, 2000);
+  };
 
   return (
     <div
@@ -39,9 +50,15 @@ const TaskItem = ({ task, handleEdit, handleDelete, toggleStatus }) => {
       <p>
         <b>Status</b>:{" "}
         {completed ? (
-          <button> Completed</button>
+          <button disabled> Completed</button>
         ) : (
-          <button onClick={toggleStatus}>Mark as completed</button>
+          <button
+            onClick={handleToggleStatus}
+            className="cursor"
+            disabled={isButtonDisabled}
+          >
+            {isButtonDisabled ? "Marking as completed" : "Mark as completed"}
+          </button>
         )}
       </p>
       <div className="task-btn-cont">
