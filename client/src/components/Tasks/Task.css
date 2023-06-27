@@ -1,0 +1,125 @@
+/* Task.jsx */
+.task-parent-cont {
+    display: flex;
+    justify-content: start;
+    /* align-items: center; */
+    flex-wrap: wrap;
+    /* gap: 20px;
+    border: 1px solid red; */
+    height: auto;
+
+
+}
+
+.task-parent-cont>div:nth-child(2) {
+    flex-grow: 1;
+    flex-basis: 0;
+
+}
+
+
+.task-cont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* border: 1px solid red; */
+    gap: 5%;
+    margin: 20px;
+}
+
+.task-parent-cont {
+    padding: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+form div {
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+.search-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+
+
+
+/* TaskItem.jsx */
+.task-item-cont {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width: 300px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.task-btn-cont {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* border: 1px solid red */
+}
+
+.task-btn-cont button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 40%;
+}
+
+.task-btn-cont button:hover {
+    background-color: #0056b3;
+}
+
+.gray-bg {
+    background-color: #007bff5f;
+}

@@ -8,13 +8,13 @@ exports.register = async (req, res) => {
     const { username, email, password } = req.body;
     console.log(req.body);
 
-    // Check if the username is already taken
+    // Check if the username is already taken or not
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ error: "Username is already taken" });
     }
 
-    // Hash the password
+    // Hash the password using bcrypt
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
@@ -49,10 +49,20 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    // Generate a JWT token
+    // Generating a JWT token
     const token = jwt.sign({ userId: user._id }, "secretKey");
 
-    res.json({ token });
+    res.json({ token, user });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to login" });
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    let users = await User.find();
+
+    res.send(users);
   } catch (error) {
     res.status(500).json({ error: "Failed to login" });
   }

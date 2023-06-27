@@ -5,20 +5,25 @@ const {
   deleteTask,
   updateTask,
   getAllTasks,
+  toggleStatus,
+  getAllTasksBySearch,
 } = require("../controllers/task.controller");
 
 const authenticate = require("../middlewares/auth.middleware");
 
 // Create a new task
-router.post("/tasks", createTask);
+router.post("/tasks", authenticate, createTask);
 
 // Retrieve all tasks
-router.get("/tasks", getAllTasks);
+router.get("/tasks", authenticate, getAllTasks);
 
 // Update a task
-router.put("/tasks/:id", updateTask);
+router.put("/tasks/:id", authenticate, updateTask);
 
 // Delete a task
-router.delete("/tasks/:id", deleteTask);
+router.delete("/tasks/:id", authenticate, deleteTask);
+
+//Toggle status
+router.patch("/tasks/toggle-status/:id", toggleStatus);
 
 module.exports = router;

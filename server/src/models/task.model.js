@@ -29,6 +29,13 @@ const taskSchema = new mongoose.Schema({
   },
 });
 
+// Populating the createdBy and assignedTo
+taskSchema.pre("findOne", function (next) {
+  this.populate("createdBy", "username");
+  this.populate("assignedTo", "username");
+  next();
+});
+
 const Task = mongoose.model("Task", taskSchema);
 
 module.exports = Task;
