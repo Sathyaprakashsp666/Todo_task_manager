@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useSnackbar } from "notistack";
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -8,11 +9,13 @@ const Navbar = () => {
   const username = useSelector((state) => state.auth.username);
 
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleLogout = () => {
     // Clear local storage
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    enqueueSnackbar("Logged out successfully", { variant: "success" });
 
     navigate("/login");
     window.location.reload();
