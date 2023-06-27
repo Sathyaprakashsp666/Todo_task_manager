@@ -68,6 +68,20 @@ button[type="submit"]:hover {
 }
 
 
+.search-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
 
 
 
@@ -106,6 +120,6 @@ button[type="submit"]:hover {
     background-color: #0056b3;
 }
 
-.gray-bg{
+.gray-bg {
     background-color: #007bff5f;
 }

@@ -11,12 +11,14 @@ import TaskItem from "./TaskItem";
 import axios from "axios";
 import "react-datepicker/dist/react-datepicker.css";
 import CreateTaskForm from "./CreateTaskForm";
+import SearchInput from "./SearchInput";
 
 const Task = () => {
   const [users, setUsers] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTaskId, setEditedTaskId] = useState(null);
   const [dueDate, setDueDate] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const token = useSelector((state) => state.auth.token);
   const id = useSelector((state) => state.auth.id);
@@ -55,9 +57,9 @@ const Task = () => {
 
   // Delete task
   const handleDelete = (task) => {
-    console.log(username);
-    console.log(task.createdBy.username);
-    console.log(task.assignedTo.username);
+    // console.log(username);
+    // console.log(task.createdBy.username);
+    // console.log(task.assignedTo.username);
     if (
       username !== task.createdBy.username &&
       username !== task.assignedTo.username
@@ -102,6 +104,7 @@ const Task = () => {
   // Update task
   const handleUpdate = (e) => {
     e.preventDefault();
+    setIsEditing(false);
     dispatch(updateTask(editedTaskId, newTask, token))
       .then(() => {
         setIsEditing(false);
@@ -117,6 +120,7 @@ const Task = () => {
       })
       .catch((error) => {
         console.log("Error updating task:", error);
+        setIsEditing(false);
       });
   };
 
@@ -140,6 +144,8 @@ const Task = () => {
 
   // Edit Form
   const handleEdit = (task) => {
+    console.log(task);
+    console.log(task.assignedTo.username);
     if (
       username !== task.createdBy.username &&
       username !== task.assignedTo.username
@@ -153,7 +159,7 @@ const Task = () => {
       id: task._id,
       title: task.title,
       description: task.description,
-      assignedTo: task.assignedTo,
+      assignedTo: task.assignedTo.username,
       dueDate: task.dueDate,
       completed: task.completed,
       createdBy: id,
@@ -163,54 +169,79 @@ const Task = () => {
 
   const handleEditBtn = () => {
     setIsEditing(false);
+    setNewTask({
+      id: "",
+      title: "",
+      description: "",
+      assignedTo: "",
+      dueDate: "",
+    });
   };
 
   // Filter tasks that are not completed
-  const incompleteTasks = tasks.filter((task) => !task.completed);
-  const completedTasks = tasks.filter((task) => task.completed);
+  // const incompleteTasks = tasks.filter((task) => !task.completed);
+  // const completedTasks = tasks.filter((task) => task.completed);
+  const incompleteTasks = tasks.filter(
+    (task) =>
+      !task.completed &&
+      (task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.createdBy.username
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        task.assignedTo.username
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()))
+  );
+
+  const completedTasks = tasks.filter(
+    (task) =>
+      task.completed &&
+      (task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.createdBy.username
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        task.assignedTo.username
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()))
+  );
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
-    <div className="task-parent-cont">
+    <>
       <div>
-        <h2>{isEditing ? "Update Task" : "Create Task"}</h2>
-
-        <CreateTaskForm
-          formRef={formRef}
-          isEditing={isEditing}
-          handleUpdate={handleUpdate}
-          handleCreate={handleCreate}
-          newTask={newTask}
-          setNewTask={setNewTask}
-          users={users}
-          dueDate={dueDate}
-          setDueDate={setDueDate}
-          handleEditBtn={handleEditBtn}
+        <SearchInput
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+          className="search-input"
         />
       </div>
-
-      {/* //Task List */}
-
-      <div>
-        <h1>Pending Tasks</h1>
-        <div className="task-cont">
-          {incompleteTasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              handleEdit={handleEdit}
-              handleDelete={() => {
-                handleDelete(task);
-              }}
-              toggleStatus={() => {
-                toggleStatusBtn(task);
-              }}
-            />
-          ))}
-        </div>
+      <div className="task-parent-cont">
         <div>
-          <h1>Completed Tasks</h1>
+          <h2>{isEditing ? "Update Task" : "Create Task"}</h2>
+
+          <CreateTaskForm
+            formRef={formRef}
+            isEditing={isEditing}
+            handleUpdate={handleUpdate}
+            handleCreate={handleCreate}
+            newTask={newTask}
+            setNewTask={setNewTask}
+            users={users}
+            dueDate={dueDate}
+            setDueDate={setDueDate}
+            handleEditBtn={handleEditBtn}
+          />
+        </div>
+
+        {/* //Task List */}
+
+        <div>
+          <h1>Pending Tasks</h1>
           <div className="task-cont">
-            {completedTasks.map((task) => (
+            {incompleteTasks?.map((task) => (
               <TaskItem
                 key={task.id}
                 task={task}
@@ -224,9 +255,27 @@ const Task = () => {
               />
             ))}
           </div>
+          <div>
+            <h1>Completed Tasks</h1>
+            <div className="task-cont">
+              {completedTasks?.map((task) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  handleEdit={handleEdit}
+                  handleDelete={() => {
+                    handleDelete(task);
+                  }}
+                  toggleStatus={() => {
+                    toggleStatusBtn(task);
+                  }}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
