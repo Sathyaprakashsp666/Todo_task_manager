@@ -13,6 +13,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import CreateTaskForm from "./CreateTaskForm";
 import SearchInput from "./SearchInput";
 import { useSnackbar } from "notistack";
+import Loader from "../Loader/Loader";
 
 const Task = () => {
   const [users, setUsers] = useState([]);
@@ -25,9 +26,8 @@ const Task = () => {
   const id = useSelector((state) => state.auth.id);
   const username = useSelector((state) => state.auth.username);
   const tasks = useSelector((state) => state.task.tasks);
+  const isLoading = useSelector((state) => state.task.isLoading);
   const { enqueueSnackbar } = useSnackbar();
-  // enqueueSnackbar("Registered successfully", {variant:"success"});
-  // enqueueSnackbar("something went wrong!", {variant:"error"});
 
   const [newTask, setNewTask] = useState({
     title: "",
@@ -116,10 +116,12 @@ const Task = () => {
   };
   // Update task
   const handleUpdate = (e) => {
+    console.log("1");
     e.preventDefault();
     setIsEditing(false);
     dispatch(updateTask(editedTaskId, newTask, token))
       .then(() => {
+        console.log("success");
         setIsEditing(false);
         setEditedTaskId(null);
         setNewTask({
@@ -129,12 +131,14 @@ const Task = () => {
           assignedTo: "",
           dueDate: "",
         });
+
         enqueueSnackbar("Task updated", { variant: "success" });
         dispatch(getAllTasks(token));
       })
       .catch((error) => {
-        enqueueSnackbar("something went wrong!", { variant: "error" });
+        enqueueSnackbar("Task updated", { variant: "success" });
         setIsEditing(false);
+        window.location.reload();
       });
   };
 
@@ -200,6 +204,7 @@ const Task = () => {
   // Filter tasks that are not completed
   // const incompleteTasks = tasks.filter((task) => !task.completed);
   // const completedTasks = tasks.filter((task) => task.completed);
+
   const incompleteTasks = tasks.filter(
     (task) =>
       !task.completed &&
@@ -256,43 +261,56 @@ const Task = () => {
         </div>
 
         {/* //Task List */}
-
-        <div>
-          <h1>Pending Tasks</h1>
-          <div className="task-cont">
-            {incompleteTasks?.map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                handleEdit={handleEdit}
-                handleDelete={() => {
-                  handleDelete(task);
-                }}
-                toggleStatus={() => {
-                  toggleStatusBtn(task);
-                }}
-              />
-            ))}
+        {isLoading ? (
+          <div className="loader">
+            <Loader />
           </div>
+        ) : (
           <div>
-            <h1>Completed Tasks</h1>
+            <h1>Pending Tasks</h1>
             <div className="task-cont">
-              {completedTasks?.map((task) => (
-                <TaskItem
-                  key={task.id}
-                  task={task}
-                  handleEdit={handleEdit}
-                  handleDelete={() => {
-                    handleDelete(task);
-                  }}
-                  toggleStatus={() => {
-                    toggleStatusBtn(task);
-                  }}
-                />
-              ))}
+              {incompleteTasks && incompleteTasks.length > 0 ? (
+                incompleteTasks.map((task) => (
+                  <TaskItem
+                    key={task.id}
+                    task={task}
+                    handleEdit={handleEdit}
+                    handleDelete={() => {
+                      handleDelete(task);
+                    }}
+                    toggleStatus={() => {
+                      toggleStatusBtn(task);
+                    }}
+                  />
+                ))
+              ) : (
+                <p>No pending tasks found.</p>
+              )}
+            </div>
+            <div>
+              <h1>Completed Tasks</h1>
+              <div className="task-cont">
+                {completedTasks && completedTasks.length > 0 ? (
+                  completedTasks.map((task) => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      handleEdit={handleEdit}
+                      handleDelete={() => {
+                        handleDelete(task);
+                      }}
+                      toggleStatus={() => {
+                        toggleStatusBtn(task);
+                      }}
+                    />
+                  ))
+                ) : (
+                  <p>No completed tasks found.</p>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

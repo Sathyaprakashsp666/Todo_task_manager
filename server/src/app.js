@@ -4,12 +4,16 @@ const connectDB = require("./config/db");
 const authRoutes = require("../src/api/routes/auth.routes");
 const taskRoutes = require("../src/api/routes/task.routes");
 const cors = require("cors");
+const helmet = require('helmet');
+
 
 require("dotenv").config();
 
 // Middleware
 app.use(express.json());
 app.use(cors());
+app.use(helmet());
+
 
 // Routes
 app.use("/api/auth", authRoutes);

@@ -43,13 +43,13 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: "User not exist!" });
     }
 
-    // Check if the password is correct
+    // Check if the password is correct or not
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ error: "Invalid credentials" });
     }
 
-    // Generating a JWT token
+    // Generating a jwt token
     const token = jwt.sign({ userId: user._id }, "secretKey");
 
     res.json({ token, user });
