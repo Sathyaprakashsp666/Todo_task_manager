@@ -1,1 +1,1 @@
-export const baseUrl = "http://localhost:8888";
+export const baseUrl = "https://task-manager-3g98.onrender.com";
