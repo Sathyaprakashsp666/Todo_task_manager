@@ -54,6 +54,15 @@ select {
     border-radius: 4px;
 }
 
+select {
+    width: 100%;
+    max-width: 200px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
 button[type="submit"] {
     padding: 8px 16px;
     background-color: #007bff;
@@ -80,6 +89,13 @@ button[type="submit"]:hover {
 .search-input:focus {
     outline: none;
     border-color: #007bff;
+}
+
+.loader {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -122,4 +138,8 @@ button[type="submit"]:hover {
 
 .gray-bg {
     background-color: #007bff5f;
+}
+
+.cursor {
+    cursor: pointer;
 }

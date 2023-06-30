@@ -34,7 +34,7 @@ const CreateTaskForm = ({
           required
         ></textarea>
       </div>
-      <div>
+      {/* <div>
         <label>Assigned To:</label>
         <select
           value={newTask.assignedTo}
@@ -50,14 +50,35 @@ const CreateTaskForm = ({
             </option>
           ))}
         </select>
-        <div>
-          <label>Due Date:</label>
-          <DatePicker
-            selected={dueDate}
-            onChange={(date) => setDueDate(date)}
-            placeholderText="Select a due date"
-          />
-        </div>
+        </div> */}
+      <div>
+        <label>Assigned To:</label>
+        {users.length > 0 ? (
+          <select
+            value={newTask.assignedTo}
+            onChange={(e) =>
+              setNewTask({ ...newTask, assignedTo: e.target.value })
+            }
+            required
+          >
+            <option value="">Select User</option>
+            {users.map((user) => (
+              <option key={user._id} value={user._id}>
+                {user.username}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <p>Loading users...</p>
+        )}
+      </div>
+      <div>
+        <label>Due Date:</label>
+        <DatePicker
+          selected={dueDate}
+          onChange={(date) => setDueDate(date)}
+          placeholderText="Select a due date"
+        />
       </div>
       <button type="submit">{isEditing ? "Update Task" : "Create Task"}</button>
       {isEditing && (
